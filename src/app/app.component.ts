@@ -32,6 +32,13 @@ export class AppComponent {}
             import('./home/home.component').then((m) => m.HomeComponentModule),
         },
         {
+          path: 'checklist/:id',
+          loadChildren: () =>
+            import('./checklist/checklist.component').then(
+              (m) => m.ChecklistComponentModule
+            ),
+        },
+        {
           path: '',
           redirectTo: 'home',
           pathMatch: 'full',

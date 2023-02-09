@@ -10,13 +10,14 @@ import { IonicModule } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
 import { ChecklistService } from '../shared/data-access/checklist.service';
 import { FormModalComponentModule } from '../shared/ui/form-modal.component';
+import { ChecklistListComponentModule } from './ui/checklist-list.component';
 
 @Component({
   selector: 'app-home',
   template: `
     <ion-header>
       <ion-toolbar>
-        <ion-title> Home </ion-title>
+        <ion-title> Home Component</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="formModalIsOpen$.next(true)">
             <ion-icon name="add" slot="icon-only"></ion-icon>
@@ -25,6 +26,10 @@ import { FormModalComponentModule } from '../shared/ui/form-modal.component';
       </ion-toolbar>
     </ion-header>
     <ion-content>
+      <app-checklist-list
+        *ngIf="checklists$ | async as checklists"
+        [checklists]="checklists"
+      ></app-checklist-list>
       <ion-modal
         [isOpen]="formModalIsOpen$ | async"
         [canDismiss]="true"
@@ -48,6 +53,8 @@ export class HomeComponent {
     private checklistService: ChecklistService
   ) {}
 
+  checklists$ = this.checklistService.getChecklists();
+
   formModalIsOpen$ = new BehaviorSubject<boolean>(false);
 
   checklistForm = this.fb.group({
@@ -55,15 +62,8 @@ export class HomeComponent {
   });
 
   addChecklist() {
-    console.log('this.checklistForm.value', this.checklistForm.value);
-    console.log(
-      'this.checklistForm.getRawValue()',
-      this.checklistForm.getRawValue()
-    );
     this.checklistService.add(this.checklistForm.getRawValue());
-    this.checklistService
-      .getChecklists()
-      .subscribe((value) => console.log('getchecklist', value));
+    // Instead of using this.checklistForm.value we are using .getRawValue(). The difference here is that getRawValue() will return the values of all fields in the form, regardless of whether they are disabled or not. This is to address the Typescript error
   }
 }
 
@@ -72,6 +72,7 @@ export class HomeComponent {
     CommonModule,
     IonicModule,
     FormModalComponentModule,
+    ChecklistListComponentModule,
     RouterModule.forChild([
       {
         path: '',

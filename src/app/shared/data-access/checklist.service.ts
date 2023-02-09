@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, filter, map } from 'rxjs';
 import { Checklist } from '../interfaces/checklist';
 
 @Injectable({
@@ -32,5 +32,12 @@ export class ChecklistService {
       slug = slug + Date.now().toString();
     }
     return slug;
+  }
+
+  getChecklistById(id: string) {
+    return this.getChecklists().pipe(
+      filter((checklists) => checklists.length > 0), // don't emit if checklists haven't loaded yet
+      map((checklists) => checklists.find((checklist) => checklist.id === id))
+    );
   }
 }
