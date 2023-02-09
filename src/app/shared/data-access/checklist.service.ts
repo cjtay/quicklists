@@ -12,6 +12,14 @@ export class ChecklistService {
     return this.checklists$.asObservable();
   }
 
+  getChecklistById(id: string) {
+    return this.getChecklists().pipe(
+      filter((checklists) => checklists.length > 0), // don't emit if checklists haven't loaded yet
+      map((checklists) => checklists.find((checklist) => checklist.id === id))
+    );
+  }
+  
+
   add(checklist: Pick<Checklist, 'title'>) {
     const newChecklist = {
       ...checklist,
@@ -34,10 +42,5 @@ export class ChecklistService {
     return slug;
   }
 
-  getChecklistById(id: string) {
-    return this.getChecklists().pipe(
-      filter((checklists) => checklists.length > 0), // don't emit if checklists haven't loaded yet
-      map((checklists) => checklists.find((checklist) => checklist.id === id))
-    );
-  }
+
 }

@@ -33,6 +33,8 @@ export class ChecklistComponent {
       this.checklistService.getChecklistById(paramMap.get('id') as string)
     )
   );
+
+
 }
 
 @NgModule({
