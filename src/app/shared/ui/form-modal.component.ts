@@ -50,7 +50,6 @@ import { IonicModule, ModalController } from '@ionic/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 // styles - The :host pseudo-selector allows us to target the host element of the component itself, not elements within the component. Setting this to 100% height will fix our display issue.
-
 export class FormModalComponent {
   constructor(private modalCtrl: ModalController) {}
 

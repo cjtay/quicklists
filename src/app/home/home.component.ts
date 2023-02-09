@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
+import { ChecklistService } from '../shared/data-access/checklist.service';
 import { FormModalComponentModule } from '../shared/ui/form-modal.component';
 
 @Component({
@@ -29,6 +30,7 @@ import { FormModalComponentModule } from '../shared/ui/form-modal.component';
           <app-form-modal
             title="Create checklist"
             [formGroup]="checklistForm"
+            (save)="addChecklist()"
           ></app-form-modal>
         </ng-template>
       </ion-modal>
@@ -39,10 +41,25 @@ import { FormModalComponentModule } from '../shared/ui/form-modal.component';
 export class HomeComponent {
   formModalIsOpen$ = new BehaviorSubject<boolean>(false);
 
-  checklistForm = this.fb.group({
+  checklistForm = this.fb.nonNullable.group({
     title: ['', Validators.required],
   });
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private checklistService: ChecklistService
+  ) {}
+
+  addChecklist() {
+    console.log('this.checklistForm.value', this.checklistForm.value);
+    console.log(
+      'this.checklistForm.getRawValue()',
+      this.checklistForm.getRawValue()
+    );
+    this.checklistService.add(this.checklistForm.getRawValue());
+    this.checklistService
+      .getChecklists()
+      .subscribe((value) => console.log('getchecklist', value));
+  }
 }
 
 @NgModule({
