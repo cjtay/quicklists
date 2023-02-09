@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  NonNullableFormBuilder,
+  Validators,
+} from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
@@ -39,15 +43,16 @@ import { FormModalComponentModule } from '../shared/ui/form-modal.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-  formModalIsOpen$ = new BehaviorSubject<boolean>(false);
-
-  checklistForm = this.fb.nonNullable.group({
-    title: ['', Validators.required],
-  });
   constructor(
-    private fb: FormBuilder,
+    private fb: NonNullableFormBuilder,
     private checklistService: ChecklistService
   ) {}
+
+  formModalIsOpen$ = new BehaviorSubject<boolean>(false);
+
+  checklistForm = this.fb.group({
+    title: ['', Validators.required],
+  });
 
   addChecklist() {
     console.log('this.checklistForm.value', this.checklistForm.value);
